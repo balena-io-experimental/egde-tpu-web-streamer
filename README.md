@@ -16,3 +16,19 @@ The webstreaming code was heavily borrowed from [@lemariva great blog post](http
 - libusb is used to communicate with the device.
 - The device supports USB 3.0 but the Pi/Fin have USB 2.0 which will be the bottleneck.
 - Google's installation script detects the platform and installs the relevant libraries. The platforms detected are only pi3/pi3b+ via the device tree model string. So need to 'tweak' the script a bit to run on the balena Fin
+
+cat 99-edgetpu-accelerator.rules 
+```
+SUBSYSTEM=="usb",ATTRS{idVendor}=="1a6e",GROUP="plugdev"
+SUBSYSTEM=="usb",ATTRS{idVendor}=="18d1",GROUP="plugdev"
+```
+
+```
+cd /usr/share/edgetpu/examples/
+
+python3 classify_image.py \
+--model models/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite \
+--label models/inat_bird_labels.txt \
+--image images/parrot.jpg
+
+```
